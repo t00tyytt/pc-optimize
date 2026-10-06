@@ -69,7 +69,8 @@ description: Windows 10/11 电脑卡顿排查与磁盘清理的完整流程，�
 
 ### 软件卸载与残留
 
-- **首选 Geek Uninstaller（本 skill 自带：`tools\geek.exe`，绿色免安装）**：有卸载器的软件都走它，自带残留扫描。让用户双击运行，或由你直接启动它并指导操作。
+- **首选 Geek Uninstaller（`tools\geek.exe`，绿色免安装）**：有卸载器的软件都走它，自带残留扫描。让用户双击运行，或由你直接启动它并指导操作。
+- **geek.exe 缺失时先补齐**：本 skill 不打包 geek.exe（闭源免费软件，不可再分发）。先查 skill 根目录下 `tools\geek.exe` 是否存在；没有就从官网直链 `https://geekuninstaller.com/geek.zip` 下载（约 3MB，zip 内是单个 geek.exe，`Invoke-WebRequest` + `Expand-Archive` 解到 skill 的 `tools\`）。下载失败/超时（可提示用户开系统代理重试一次）就退回"软件自带卸载器 + 手动残留清理"，不要卡死在这步。
 - 无卸载器/卸载后清残留：查三处注册表 Uninstall 键（HKLM、HKLM\WOW6432Node、HKCU）+ Run 启动项 + 服务 + 计划任务 + 文件系统/AppData/Temp，按"文件在但卸载项没了"判断残留，列清单后管理员脚本批量清。
 - **运行库类永远保留**：VC++ Redistributable、.NET、XNA 等——卸载省不了几 MB，却会让游戏/软件缺 DLL 报错；FLEXnet/SafeNet 等授权组件同理。
 

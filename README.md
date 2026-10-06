@@ -1,6 +1,6 @@
-# pc-optimize — Windows 10/11 电脑体检 ZCode Skill
+# pc-optimize — Windows 10/11 电脑体检 Skill（跨 agent 工具通用）
 
-一个给 [ZCode](https://github.com/zcode-ai) 用的电脑优化排查 skill：**卡顿诊断 + 磁盘清理 + 流氓软件扫描 + 右键菜单管理**，自带右键菜单管理器工具，拿到任何 Windows 电脑上都能直接用。
+一个**跨 agent 工具通用**的 Windows 10/11 电脑优化排查 skill：**卡顿诊断 + 磁盘清理 + 流氓软件扫描 + 右键菜单管理**，自带右键菜单管理器工具，拿到任何 Windows 电脑上都能直接用。任何支持 SKILL.md 规范的 agent 工具（ZCode、Claude Code、Codex、Cursor 等）都能加载；不支持 skill 机制的工具，也可以把 SKILL.md 当操作手册直接喂给 agent。
 
 ## 它做什么
 
@@ -40,26 +40,25 @@
 
 ## 安装
 
-把 `pc-optimize/` 整个文件夹复制到 ZCode 的 skill 目录：
+skill 本体只是 `SKILL.md + tools/`，没有任何平台专属依赖。把 `pc-optimize/` 整个文件夹复制到你所用工具的 skill 目录：
+
+| 工具 | 用户级目录 |
+|---|---|
+| ZCode / Codex 等遵循 agents 标准的 | `%USERPROFILE%\.agents\skills\pc-optimize` |
+| Claude Code | `%USERPROFILE%\.claude\skills\pc-optimize` |
+| 任意仓库（项目级） | `<repo>\.agents\skills\pc-optimize`（按各工具约定） |
 
 ```powershell
-# 用户级（所有项目可用）
 Copy-Item -Recurse pc-optimize "$env:USERPROFILE\.agents\skills\pc-optimize"
-
-# 或项目级（仅当前仓库）
-Copy-Item -Recurse pc-optimize "<repo>\.agents\skills\pc-optimize"
 ```
 
-重启 ZCode 会话后生效，或直接用 `/pc-optimize` 强制加载。
+不支持 skill 机制的 agent 工具，直接把 SKILL.md 内容作为手册放进系统提示同样可用。
 
-## 关于 geek.exe（未随仓库分发）
+## 关于 geek.exe（未随仓库分发，skill 会自动下载）
 
-skill 的卸载流程首选 [Geek Uninstaller](https://geekuninstaller.com/)。它是**闭源免费软件，本项目不打包分发**。如需完整功能：
+skill 的卸载流程首选 [Geek Uninstaller](https://geekuninstaller.com/)。它是**闭源免费软件，本项目不打包分发**。
 
-1. 从官网下载绿色版 `geek.exe`
-2. 放到 `pc-optimize/tools/geek.exe`
-
-没有它 skill 照样工作（会改用软件自带卸载器 + 手动残留清理流程）。
+skill 运行时会自己处理：检查 `pc-optimize/tools/geek.exe`，缺失就从官网直链 `https://geekuninstaller.com/geek.zip`（约 3MB）下载解压到 `tools/`；下载失败则退回软件自带卸载器 + 手动残留清理，不影响其余流程。想手动放置也行：下载后把 `geek.exe` 放进 `pc-optimize/tools/`。
 
 ## 免责声明
 
